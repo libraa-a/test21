@@ -1,0 +1,29 @@
+name: Python Demo CI
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. 检出代码
+    - uses: actions/checkout@v3
+
+    # 2. 准备 Python 环境
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.10"
+
+    # 3. 运行测试任务 (冒烟测试)
+    - name: Run Smoke Test
+      run: make test
+
+    # 4. 运行构建任务
+    - name: Build Application
+      # 即使测试失败也尝试执行打包，方便你查看完整的流程
+      if: always() 
+      run: make build
